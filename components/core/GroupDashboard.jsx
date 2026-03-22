@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { IGroupManager } from '@/lib/core/contracts';
+import { IGroupUtils } from '@/lib/core/contracts';
 import Modal from './Modal';
 import ConfirmDialog from './ConfirmDialog';
 import AddGroupForm from './AddGroupForm';
@@ -40,20 +40,20 @@ export default function GroupDashboard({
   const [selectedDeviceIds, setSelectedDeviceIds] = useState([]);
   const [loadingDevices, setLoadingDevices] = useState(false);
 
-  // Late binding of the plugged Manager Class from the SPLA Registry
-  const ManagerClass = IGroupManager.class;
+  // Late binding of the plugged Utils Class from the SPLA Registry
+  const UtilsClass = IGroupUtils.class;
 
   const fetchData = useCallback(() => {
-    // Late binding of the plugged Manager Class from the SPLA Registry
-    const PluggedClass = IGroupManager.class;
+    // Late binding of the plugged Utils Class from the SPLA Registry
+    const PluggedClass = IGroupUtils.class;
 
     if (PluggedClass) {
-      console.log("[SPLA-DASHBOARD] Resolving Manager Class:", PluggedClass.name);
-      const manager = new PluggedClass();
+      console.log("[SPLA-DASHBOARD] Resolving Utils Class:", PluggedClass.name);
+      const utils = new PluggedClass();
       setLoading(true);
 
       // Map to generic getAllGroup request
-      manager.getAPI().getAllGroup({ level, parentId })
+      utils.getAPI().getAllGroup({ level, parentId })
         .then(data => {
           console.log("[SPLA-DASHBOARD] Synchronized Items:", (data || []).length);
           setGroups(Array.isArray(data) ? data : []);
@@ -64,18 +64,18 @@ export default function GroupDashboard({
       console.warn("[SPLA-DASHBOARD] Waiting for Domain Registration...");
       setLoading(false);
     }
-  }, [level, parentId, IGroupManager.class]);
+  }, [level, parentId, IGroupUtils.class]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   const fetchAvailableDevices = async () => {
-    if (!ManagerClass) return;
+    if (!UtilsClass) return;
     setLoadingDevices(true);
     try {
-      const manager = new ManagerClass();
-      const data = await manager.getAPI().getAvailableDevices();
+      const utils = new UtilsClass();
+      const data = await utils.getAPI().getAvailableDevices();
       setAvailableDevices(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to load available devices", err);
@@ -94,12 +94,12 @@ export default function GroupDashboard({
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!ManagerClass) return;
+    if (!UtilsClass) return;
     setIsSubmitting(true);
     try {
-      const manager = new ManagerClass();
+      const utils = new UtilsClass();
       // Map to descriptive createGroup request
-      await manager.getAPI().createGroup({ ...formData, level, parentId });
+      await utils.getAPI().createGroup({ ...formData, level, parentId });
       closeModals();
       fetchData();
     } catch (err) {
@@ -111,12 +111,12 @@ export default function GroupDashboard({
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    if (!ManagerClass || !selectedGroup) return;
+    if (!UtilsClass || !selectedGroup) return;
     setIsSubmitting(true);
     try {
-      const manager = new ManagerClass();
+      const utils = new UtilsClass();
       // Map to descriptive updateGroup request
-      await manager.getAPI().updateGroup(selectedGroup.id, formData);
+      await utils.getAPI().updateGroup(selectedGroup.id, formData);
       closeModals();
       fetchData();
     } catch (err) {
@@ -127,12 +127,12 @@ export default function GroupDashboard({
   };
 
   const handleDelete = async () => {
-    if (!ManagerClass || !selectedGroup) return;
+    if (!UtilsClass || !selectedGroup) return;
     setIsSubmitting(true);
     try {
-      const manager = new ManagerClass();
+      const utils = new UtilsClass();
       // Map to descriptive deleteGroup request
-      await manager.getAPI().deleteGroup(selectedGroup.id);
+      await utils.getAPI().deleteGroup(selectedGroup.id);
       closeModals();
       fetchData();
     } catch (err) {
@@ -144,11 +144,11 @@ export default function GroupDashboard({
 
   const handleAssign = async (e) => {
     e.preventDefault();
-    if (!ManagerClass || !selectedGroup || selectedDeviceIds.length === 0) return;
+    if (!UtilsClass || !selectedGroup || selectedDeviceIds.length === 0) return;
     setIsSubmitting(true);
     try {
-      const manager = new ManagerClass();
-      await manager.getAPI().assignDevices(selectedGroup.id, selectedDeviceIds);
+      const utils = new UtilsClass();
+      await utils.getAPI().assignDevices(selectedGroup.id, selectedDeviceIds);
       closeModals();
       fetchData();
     } catch (err) {
