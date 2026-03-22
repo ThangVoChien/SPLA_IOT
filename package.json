@@ -1,0 +1,26 @@
+{
+  "name": "iot-core-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "axios": "^1.13.6",
+    "bcryptjs": "^3.0.3",
+    "bootstrap": "^5.3.3",
+    "jose": "^5.4.1",
+    "next": "15.0.3",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "15.0.3",
+    "prisma": "^5.14.0"
+  }
+}

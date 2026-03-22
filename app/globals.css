@@ -1,0 +1,227 @@
+:root {
+  --primary: #bd93f9;
+  --primary-hover: #ff79c6;
+  --secondary: #6272a4;
+  --bg-main: #282a36;
+  --bg-card: #3a3d4d;
+  --bg-sidebar: #21222c;
+  --text-main: #f8f8f2;
+  --text-muted: #94a3b8;
+  --success: #50fa7b;
+  --warning: #f1fa8c;
+  --danger: #ff5555;
+  --info: #8be9fd;
+  --border-glass: rgba(255, 255, 255, 0.05);
+  --radius-lg: 12px;
+  --transition-smooth: all 0.25s ease-in-out;
+
+  /* Bootstrap Variable Overrides */
+  --bs-body-bg: var(--bg-main);
+  --bs-body-color: var(--text-main);
+  --bs-secondary-color: var(--secondary);
+  --bs-tertiary-bg: var(--bg-sidebar);
+  --bs-border-color: var(--border-glass);
+
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text-main);
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+  --bs-table-active-bg: rgba(255, 255, 255, 0.05);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-border-color: var(--border-glass);
+}
+
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-sidebar {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-glass);
+}
+
+/* Custom Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-glass);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Bootstrap Overrides */
+.btn-primary {
+  background-color: var(--primary);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  color: var(--text-main);
+}
+
+.nav-link {
+  color: var(--text-muted);
+  border-radius: 12px;
+  margin: 4px 0;
+  transition: var(--transition-smooth);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+  background-color: var(--primary) !important;
+  color: #282a36 !important;
+  /* Contrast against purple */
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(189, 147, 249, 0.4);
+}
+
+.nav-link:hover {
+  background: rgba(189, 147, 249, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+
+.table,
+.table-responsive,
+.card,
+.glass-panel,
+.list-group-item,
+.modal-content,
+.dropdown-menu {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-glass) !important;
+}
+
+.table tr,
+.table td,
+.table th {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+.table thead th {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  color: var(--primary) !important;
+}
+
+/* Force high contrast text */
+.text-white,
+.fw-bold,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #ffffff !important;
+}
+
+.text-muted,
+.small,
+.opacity-50,
+.opacity-75 {
+  color: #bdc3e0 !important;
+  /* Brighter for readability */
+}
+
+input.form-control {
+  background-color: #1e1f29 !important;
+  /* Darker Dracula input */
+  border-color: #44475a !important;
+  color: #f8f8f2 !important;
+}
+
+/* Dracula Purple Utilities */
+.bg-purple {
+  background-color: #bd93f9 !important;
+}
+
+.text-purple {
+  color: #bd93f9 !important;
+}
+
+.border-purple {
+  border-color: #bd93f9 !important;
+}
+
+/* Cancel/Close Hover Effects */
+.btn-cancel-hover {
+  transition: var(--transition-smooth) !important;
+}
+
+.btn-cancel-hover:hover {
+  background-color: var(--danger) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  transform: translateY(-1px);
+}
+
+.btn-sm-cancel {
+  transition: var(--transition-smooth) !important;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.btn-sm-cancel:hover {
+  background-color: var(--danger) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* Specific Custom Scrollbar for inner containers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(189, 147, 249, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}

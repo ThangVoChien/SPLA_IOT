@@ -1,0 +1,82 @@
+# ========================
+# ENV
+# ========================
+.env
+.env.*
+!.env.example
+
+# ========================
+# DATABASE
+# ========================
+dev.db
+*.sqlite
+*.sqlite3
+*.db
+
+# ========================
+# NODE MODULES
+# ========================
+node_modules/
+
+# ========================
+# BUILD / DIST
+# ========================
+dist/
+build/
+.next/
+out/
+
+# ========================
+# LOGS
+# ========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# OS FILES
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE / EDITOR
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ========================
+# CACHE
+# ========================
+.cache/
+.parcel-cache/
+.eslintcache
+
+# ========================
+# TEMP FILES
+# ========================
+tmp/
+temp/
+
+# ========================
+# DOCKER
+# ========================
+docker-compose.override.yml
+
+# ========================
+# MISC
+# ========================
+*.local
+Core_App.md
+Database_Schema.md
+Domain_Specific.md
+Project_Specify.md
+Requirement.md
+Simulator.md
+simulator.js
+
+lib/simulator

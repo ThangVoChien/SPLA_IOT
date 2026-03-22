@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  users   User[]
+  devices Device[]
+
+  @@map("organizations")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  orgId        String
+  username     String       @unique
+  passwordHash    String
+  role            String
+  telegram        Telegram?
+  organization    Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  logs         Log[]
+
+  @@map("users")
+}
+
+model Sensor {
+  id            String   @id @default(uuid())
+  sensorType    String
+  unit          String
+  dataType      String
+  alertTemplate String
+  devices       Device[]
+
+  @@map("sensors")
+}
+
+model Device {
+  id           String       @id @default(uuid())
+  orgId        String
+  sensorId     String
+  name         String
+  macAddress   String       @unique
+  status       String       @default("OFFLINE")
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  sensor       Sensor       @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  threshold    Threshold?
+  telemetries  Telemetry[]
+
+  @@map("devices")
+}
+
+model Threshold {
+  id             String  @id @default(uuid())
+  deviceId       String  @unique
+  operator       String
+  thresholdValue Float
+  device         Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  alerts         Alert[]
+
+  @@map("thresholds")
+}
+
+model Telemetry {
+  id        String   @id @default(cuid())
+  deviceId  String
+  value     Float
+  timestamp DateTime @default(now())
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, timestamp(sort: Desc)])
+  @@map("telemetries")
+}
+
+model Alert {
+  id             String    @id @default(uuid())
+  thresholdId    String
+  triggeredValue Float
+  message        String    @default("")
+  severity       String    @default("WARNING")
+  timestamp      DateTime  @default(now())
+  threshold      Threshold @relation(fields: [thresholdId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  details   String
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("logs")
+}
+
+model Telegram {
+  id        String  @id @default(uuid())
+  userId    String  @unique
+  chatId    String?
+  isEnabled Boolean @default(true)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("telegrams")
+}
