@@ -60,6 +60,11 @@ async function ensureAdmin() {
 // Only run on dev/build startup
 if (process.env.NODE_ENV !== 'production' || process.env.PHASE === 'phase-production-build') {
   ensureAdmin();
+  
+  // SPLA: Centralized Domain Bootstrapper (Plug and Play)
+  import('./lib/domain/boot.js').then(m => {
+    m.bootDomain();
+  });
 }
 
 /** @type {import('next').NextConfig} */

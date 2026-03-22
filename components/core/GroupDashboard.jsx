@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { IGroupUtils } from '@/lib/core/contracts';
+import { IGroupMapping } from '@/lib/core/contracts';
 import Modal from './Modal';
 import ConfirmDialog from './ConfirmDialog';
 import AddGroupForm from './AddGroupForm';
@@ -41,11 +41,11 @@ export default function GroupDashboard({
   const [loadingDevices, setLoadingDevices] = useState(false);
 
   // Late binding of the plugged Utils Class from the SPLA Registry
-  const UtilsClass = IGroupUtils.class;
+  const UtilsClass = IGroupMapping.class;
 
   const fetchData = useCallback(() => {
     // Late binding of the plugged Utils Class from the SPLA Registry
-    const PluggedClass = IGroupUtils.class;
+    const PluggedClass = IGroupMapping.class;
 
     if (PluggedClass) {
       console.log("[SPLA-DASHBOARD] Resolving Utils Class:", PluggedClass.name);
@@ -53,7 +53,7 @@ export default function GroupDashboard({
       setLoading(true);
 
       // Map to generic getAllGroup request
-      utils.getAPI().getAllGroup({ level, parentId })
+      utils.getAPI().getAllGroup()
         .then(data => {
           console.log("[SPLA-DASHBOARD] Synchronized Items:", (data || []).length);
           setGroups(Array.isArray(data) ? data : []);
@@ -64,7 +64,7 @@ export default function GroupDashboard({
       console.warn("[SPLA-DASHBOARD] Waiting for Domain Registration...");
       setLoading(false);
     }
-  }, [level, parentId, IGroupUtils.class]);
+  }, [level, parentId, IGroupMapping.class]);
 
   useEffect(() => {
     fetchData();
