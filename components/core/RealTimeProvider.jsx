@@ -5,10 +5,12 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const RealTimeContext = createContext({
   latestTelemetry: null,
   latestAlert: null,
+  userOrgId: null,
   connected: false
 });
 
 export function RealTimeProvider({ children }) {
+  const [userOrgId, setUserOrgId] = useState(null);
   const [state, setState] = useState({
     latestTelemetry: null,
     latestAlert: null,
@@ -17,6 +19,18 @@ export function RealTimeProvider({ children }) {
     deviceCount: 0,
     connected: false
   });
+
+  const fetchSession = async () => {
+    try {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (data.orgId) {
+        setUserOrgId(data.orgId);
+      }
+    } catch (err) {
+      console.error('Failed to fetch session', err);
+    }
+  };
 
   const fetchAlerts = async () => {
     try {
@@ -43,6 +57,10 @@ export function RealTimeProvider({ children }) {
   };
 
   useEffect(() => {
+    // [SPLA-BOOT] Client-side component registration (Safe for JSX)
+    import('@/lib/domain/boot.js').then(m => m.bootClient());
+
+    fetchSession();
     fetchStats();
     fetchAlerts();
     const sse = new EventSource('/api/stream');
@@ -75,7 +93,6 @@ export function RealTimeProvider({ children }) {
       sse.close();
     };
 
-    // Every 1 second, clear out telemetry (>30s) and alerts (>24h)
     const expiryTimer = setInterval(() => {
       const now = Date.now();
       const oneDayAgo = now - 24 * 60 * 60 * 1000;
@@ -101,8 +118,9 @@ export function RealTimeProvider({ children }) {
 
   const value = {
     ...state,
+    userOrgId,
     deviceCount: activeDeviceIds.size,
-    telemetryPerMinute: slidingHistory.length * 2 // Estimate msg/min based on 30s window
+    telemetryPerMinute: slidingHistory.length * 2
   };
 
   return (

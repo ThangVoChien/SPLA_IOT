@@ -222,6 +222,43 @@ input.form-control {
   border-radius: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+/* Animations & Premium Transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.blur-2xl {
+  filter: blur(40px);
+}
+
+.group:hover .group-hover\:opacity-20 {
+  opacity: 0.2 !important;
+}
+
+.z-0 { z-index: 0; }
+.z-1 { z-index: 1; }
+/* Status Shadows & Pulse Animations */
+.shadow-danger { box-shadow: 0 0 12px rgba(255, 85, 85, 0.4); }
+.shadow-warning { box-shadow: 0 0 12px rgba(241, 250, 140, 0.4); }
+@keyframes status-pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
+.animate-pulse { animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.scale-125 { transform: scale(1.25); }

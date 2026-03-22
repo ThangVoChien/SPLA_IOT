@@ -18,7 +18,9 @@ export async function GET(request) {
       controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'connected' })}\n\n`));
 
       const onTelemetry = (data) => {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'telemetry', payload: data })}\n\n`));
+        if (data.orgId === session.orgId) {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'telemetry', payload: data })}\n\n`));
+        }
       };
 
       const onAlert = (data) => {
