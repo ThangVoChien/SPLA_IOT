@@ -70,13 +70,20 @@ export default function GroupDashboard({
     fetchData();
   }, [fetchData]);
 
-  const fetchAvailableDevices = async () => {
-    if (!UtilsClass) return;
+  const fetchAvailableDevices = async (groupId) => {
+    if (!UtilsClass || !groupId) return;
     setLoadingDevices(true);
     try {
       const utils = new UtilsClass();
-      const data = await utils.getAPI().getAvailableDevices();
+      const data = await utils.getAPI().getAvailableDevices(groupId);
       setAvailableDevices(Array.isArray(data) ? data : []);
+      
+      // Auto-select devices that already belong to this group
+      const alreadyAssigned = (Array.isArray(data) ? data : [])
+        .filter(device => device.productionAreaId === groupId)
+        .map(device => device.id);
+      
+      setSelectedDeviceIds(alreadyAssigned);
     } catch (err) {
       console.error("Failed to load available devices", err);
     } finally {
@@ -144,7 +151,7 @@ export default function GroupDashboard({
 
   const handleAssign = async (e) => {
     e.preventDefault();
-    if (!UtilsClass || !selectedGroup || selectedDeviceIds.length === 0) return;
+    if (!UtilsClass || !selectedGroup) return;
     setIsSubmitting(true);
     try {
       const utils = new UtilsClass();
@@ -238,7 +245,7 @@ export default function GroupDashboard({
                 }}
                 onAssign={() => {
                   setSelectedGroup(group);
-                  fetchAvailableDevices();
+                  fetchAvailableDevices(group.id);
                   setActiveModal('ASSIGN');
                 }}
               />
@@ -293,7 +300,7 @@ export default function GroupDashboard({
               <button type="button" onClick={closeModals} className="btn btn-outline-light border-0 opacity-50 btn-cancel-hover">Cancel</button>
               <button
                 type="submit"
-                disabled={isSubmitting || selectedDeviceIds.length === 0}
+                disabled={isSubmitting}
                 className="btn btn-primary px-4 fw-bold shadow-lg"
               >
                 {isSubmitting ? 'Linking...' : 'Assign Nodes'}

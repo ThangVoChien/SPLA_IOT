@@ -1,12 +1,23 @@
-'use client';
+'use client'
 
 import React, { useEffect, useState } from 'react';
 
+/**
+ * Premium Status Widget for SPLA (Bootstrap/Dracula Theme)
+ * Displays a discrete status value with mapping, alerts, and pulse animations.
+ */
 const StatusWidget = ({ label, value, mapping }) => {
     const displayValue = mapping ? (mapping[value] || 'Unknown') : value;
-    const isAlert = value === 1 || value === 2 || value === 'Detected' || String(displayValue).includes('Accident') || String(displayValue).includes('Heavy');
+    
+    // Alert logic based on values or keywords
+    const isAlert = value === 1 || value === 2 || 
+                    value === 'Detected' || 
+                    String(displayValue).toLowerCase().includes('accident') || 
+                    String(displayValue).toLowerCase().includes('heavy');
     
     const [isPulsing, setIsPulsing] = useState(false);
+    
+    // Animate on value change
     useEffect(() => {
         setIsPulsing(true);
         const timer = setTimeout(() => setIsPulsing(false), 500);
@@ -14,24 +25,28 @@ const StatusWidget = ({ label, value, mapping }) => {
     }, [value]);
 
     return (
-        <div className={`glass-card p-6 animate-fade-in-up relative overflow-hidden group ${isAlert ? 'border-red-500/40' : ''}`}>
-            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 transition-all duration-500 group-hover:opacity-30 ${isPulsing ? 'scale-110 opacity-40' : 'scale-100'} ${isAlert ? 'bg-red-500' : 'bg-green-500'}`} />
+        <div className={`glass-panel p-4 animate-fade-in-up position-relative overflow-hidden group transition-all hover:scale-105 ${isAlert ? 'border-danger border-opacity-50' : ''}`}>
+            {/* Background Glow */}
+            <div 
+                className={`position-absolute end-0 top-0 translate-middle w-50 h-50 rounded-circle blur-2xl transition-all duration-500 opacity-20 group-hover:opacity-30 ${isPulsing ? 'scale-125 opacity-40' : 'scale-100'} ${isAlert ? 'bg-danger' : 'bg-success'}`}
+                style={{ right: '-20%', top: '-20%' }}
+            />
             
-            <div className="flex items-center gap-3 mb-4 relative z-10">
-                <div className={`p-2.5 rounded-xl border ${isAlert ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-green-500/10 border-green-500/20 text-green-500'}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <div className="d-flex align-items-center gap-3 mb-4 position-relative z-1">
+                <div className={`p-2.5 rounded-3 border d-flex align-items-center justify-content-center ${isAlert ? 'bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger' : 'bg-success bg-opacity-10 border-success border-opacity-25 text-success'}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: '24px', height: '24px' }}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <p className="text-sm text-slate-400 font-medium uppercase tracking-wider">{label}</p>
+                <p className="small text-muted font-bold text-uppercase tracking-widest mb-0">{label}</p>
             </div>
             
-            <div className="flex items-center gap-3 relative z-10">
-                <div className="relative flex h-3 w-3">
-                    {isAlert && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>}
-                    <span className={`relative inline-flex rounded-full h-3 w-3 ${isAlert ? 'bg-red-500' : 'bg-green-500'}`}></span>
+            <div className="d-flex align-items-center gap-3 position-relative z-1">
+                <div className="position-relative d-flex" style={{ width: '12px', height: '12px' }}>
+                    {isAlert && <span className="animate-pulse position-absolute w-100 h-100 rounded-circle bg-danger opacity-75 shadow-danger"></span>}
+                    <span className={`position-relative rounded-circle w-100 h-100 ${isAlert ? 'bg-danger shadow-danger' : 'bg-success'}`}></span>
                 </div>
-                <span className={`text-2xl font-bold tracking-tight transition-colors duration-300 ${isAlert ? 'text-red-400' : 'text-green-400'} ${isPulsing ? 'brightness-150' : ''}`}>
+                <span className={`fs-2 fw-bold tracking-tight transition-colors duration-300 ${isAlert ? 'text-danger' : 'text-success'} ${isPulsing ? 'text-white' : ''}`} style={{ textShadow: isAlert ? '0 0 15px rgba(255, 85, 85, 0.3)' : 'none' }}>
                     {displayValue}
                 </span>
             </div>
