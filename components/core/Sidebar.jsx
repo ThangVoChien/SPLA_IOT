@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IGroupSidebar } from '@/lib/core/contracts';
+import { authUtils } from '@/lib/utils/AuthUtils';
 
 const NAV_ITEMS = [
   { label: 'Overview', href: '/dashboard', icon: 'bi-grid-1x2-fill' },
