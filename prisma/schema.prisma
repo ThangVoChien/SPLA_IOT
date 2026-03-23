@@ -103,6 +103,8 @@ model Log {
 model Telegram {
   id        String  @id @default(uuid())
   userId    String  @unique
+  chatId    String?
+  isEnabled Boolean @default(true)
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("telegrams")
