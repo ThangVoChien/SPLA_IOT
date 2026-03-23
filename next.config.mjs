@@ -22,7 +22,7 @@ async function ensureAdmin() {
         // Use the path relative to the prisma/ folder where the schema is located
         const relativeDbPath = '../lib/domain/dev.db';
         const envCmd = process.platform === 'win32' ? `set DATABASE_URL=file:${relativeDbPath} &&` : `DATABASE_URL=file:${relativeDbPath}`;
-        execSync(`${envCmd} npx prisma db push --accept-data-loss`, { 
+        execSync(`${envCmd} npx prisma db push --accept-data-loss --skip-generate`, { 
           stdio: 'inherit',
           cwd: process.cwd()
         });
@@ -59,11 +59,11 @@ async function ensureAdmin() {
 
 // Only run on dev/build startup
 if (process.env.NODE_ENV !== 'production' || process.env.PHASE === 'phase-production-build') {
-  ensureAdmin();
-  
-  // SPLA: Phased Domain Bootstrapper (Server Phase)
-  import('./lib/domain/boot.js').then(m => {
-    m.bootServer();
+  ensureAdmin().finally(() => {
+    // SPLA: Phased Domain Bootstrapper (Server Phase)
+    import('./lib/domain/boot.js').then(m => {
+      m.bootServer();
+    });
   });
 }
 
