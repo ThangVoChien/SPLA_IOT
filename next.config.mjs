@@ -1,15 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { execSync } from 'child_process';
-import path from 'path';
+
+<<<<<<< Updated upstream
+const prisma = new PrismaClient();
+=======
+const RUNTIME_DB_URL = process.env.DATABASE_URL || 'file:../prisma/dev.db';
 
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: `file:${path.join(process.cwd(), 'lib', 'domain', 'dev.db')}`
+      url: RUNTIME_DB_URL
     }
   }
 });
+>>>>>>> Stashed changes
 
 async function ensureAdmin() {
   try {
@@ -19,12 +24,20 @@ async function ensureAdmin() {
     } catch (dbError) {
       if (dbError.code === 'P2021' || dbError.message.includes('does not exist')) {
         console.log('🏗️ Database tables missing. Initializing with prisma db push...');
-        // Use the path relative to the prisma/ folder where the schema is located
-        const relativeDbPath = '../lib/domain/dev.db';
-        const envCmd = process.platform === 'win32' ? `set DATABASE_URL=file:${relativeDbPath} &&` : `DATABASE_URL=file:${relativeDbPath}`;
+<<<<<<< Updated upstream
+        const databaseUrl = process.env.DATABASE_URL || 'file:../prisma/dev.db';
+        execSync('npx prisma db push --accept-data-loss --skip-generate', {
+=======
+        const relativeDbPath = RUNTIME_DB_URL;
+        const envCmd = process.platform === 'win32' ? `set DATABASE_URL=${relativeDbPath} &&` : `DATABASE_URL=${relativeDbPath}`;
         execSync(`${envCmd} npx prisma db push --accept-data-loss`, { 
+>>>>>>> Stashed changes
           stdio: 'inherit',
-          cwd: process.cwd()
+          cwd: process.cwd(),
+          env: {
+            ...process.env,
+            DATABASE_URL: databaseUrl
+          }
         });
         console.log('✅ Database initialized successfully.');
       } else {

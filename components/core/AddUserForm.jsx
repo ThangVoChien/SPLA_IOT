@@ -24,7 +24,7 @@ export default function AddUserForm() {
     const role = formData.get('role');
 
     try {
-      const res = await adminClient('users', 'POST', { 
+      const res = await adminUtils('users', 'POST', { 
         orgId,
         username,
         password,

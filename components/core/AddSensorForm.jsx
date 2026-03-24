@@ -22,12 +22,17 @@ export default function AddSensorForm() {
     setLoading(true);
     setError('');
 
-    const res = await adminUtils('sensors', 'POST', { name, unit, alertTemplate });
+    const res = await adminUtils('sensors', 'POST', {
+      sensorType,
+      unit,
+      dataType,
+      alertTemplate,
+    });
     if (res.error) {
       setError(res.error);
     } else {
       setShow(false);
-      setName('');
+      setSensorType('');
       setUnit('');
       setDataType('FLOAT');
       setAlertTemplate('');
