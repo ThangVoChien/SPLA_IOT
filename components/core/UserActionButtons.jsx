@@ -28,7 +28,7 @@ export default function UserActionButtons({ user, currentUserId }) {
     setPendingAction(null);
     try {
       const role = pendingAction === 'promote' ? 'ADMIN' : 'USER';
-      const res = await adminClient('users', 'PATCH', { role }, user.id);
+      const res = await adminUtils('users', 'PATCH', { role }, user.id);
       if (res.error) {
         setError(res.error);
       } else {
@@ -46,7 +46,7 @@ export default function UserActionButtons({ user, currentUserId }) {
     setLoading(true);
     setError('');
     try {
-      const res = await adminClient('users', 'PUT', { username, password }, user.id);
+      const res = await adminUtils('users', 'PUT', { username, password }, user.id);
       if (res.error) {
         setError(res.error);
       } else {
