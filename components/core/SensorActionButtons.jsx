@@ -24,7 +24,7 @@ export default function SensorActionButtons({ sensor }) {
     setLoading(true);
     setError('');
     try {
-      const res = await adminClient('sensors', 'PUT', { sensorType, unit, dataType, alertTemplate }, sensor.id);
+      const res = await adminUtils('sensors', 'PUT', { sensorType, unit, dataType, alertTemplate }, sensor.id);
       if (res.error) {
         setError(res.error);
       } else {
