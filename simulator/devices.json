@@ -1,0 +1,8 @@
+[
+  {"macAddress": "00:F1:AA:BB:CC:01" },
+  {"macAddress": "00:F1:AA:BB:CC:02" },
+  {"macAddress": "00:H1:11:22:33:01" },
+  {"macAddress": "00:H1:11:22:33:02" },
+  {"macAddress": "00:Y1:99:88:77:01" },
+  {"macAddress": "FF:FF:FF:FF:FF:FF" }
+]
