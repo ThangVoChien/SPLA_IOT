@@ -23,7 +23,7 @@ export default function OrgActionButtons({ org, currentOrgId }) {
     setLoading(true);
     setError('');
     try {
-      const res = await adminClient('organizations', 'PUT', { name }, org.id);
+      const res = await adminUtils('organizations', 'PUT', { name }, org.id);
       if (res.error) {
         setError(res.error);
       } else {
