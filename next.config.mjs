@@ -20,13 +20,12 @@ async function ensureAdmin() {
     } catch (dbError) {
       if (dbError.code === 'P2021' || dbError.message.includes('does not exist')) {
         console.log('🏗️ Database tables missing. Initializing with prisma db push...');
-        const databaseUrl = process.env.DATABASE_URL || 'file:../prisma/dev.db';
-        execSync('npx prisma db push --accept-data-loss --skip-generate', {
+        execSync('npx prisma db push --accept-data-loss --skip-generate', { 
           stdio: 'inherit',
           cwd: process.cwd(),
           env: {
             ...process.env,
-            DATABASE_URL: databaseUrl
+            DATABASE_URL: RUNTIME_DB_URL
           }
         });
         console.log('✅ Database initialized successfully.');
