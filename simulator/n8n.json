@@ -1,0 +1,159 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "simulator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "2a68e19d-00a3-4ebe-bb31-c967983cc390",
+      "name": "Simulator Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        656
+      ],
+      "webhookId": "1265d362-466a-407b-949b-139185257830"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.valid }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "0244fa8c-9dc7-4f0c-8edc-8a30b93b7545",
+      "name": "Is Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/ingest",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.payload }}",
+        "options": {}
+      },
+      "id": "6f7a187b-4889-406a-be20-de970cb91739",
+      "name": "Send To Ingest API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -320,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"message\": \"Data sent to Server\",\n  \"deviceId\": \"{{ $node[\"Validate Payload\"].json.payload.deviceId }}\"\n}",
+        "options": {}
+      },
+      "id": "55703adb-190b-4ee5-a0f6-f1e72dce2454",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"failed\",\n  \"reason\": \"{{ $json.reason }}\"\n}",
+        "options": {}
+      },
+      "id": "ede04e6f-549d-4444-8388-623958bed3ba",
+      "name": "Fail Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        768
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json;\nconst payload = input.body || {};\n\nlet macAddress = '';\nlet value = null;\n\nmacAddress = payload?.macAddress;\nvalue = payload?.value;\n\nconst hasMac = !!macAddress && typeof macAddress === 'string';\nconst hasValue = value !== undefined && value !== null && !isNaN(value);\n\nconst ingestPayload = (hasMac && hasValue) ? {\n  macAddress: macAddress,\n  value: value,\n} : null;\n\nreturn [{\n  json: {\n    valid: !!ingestPayload,\n    payload: ingestPayload,\n    reason: !hasMac ? \"Missing MacAddress\" : (!hasValue ? \"Missing Value\" : \"OK\")\n  }\n}];"
+      },
+      "id": "56441e1b-9cc9-4e5b-83ad-d99cbab30b2b",
+      "name": "Validate Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        656
+      ]
+    }
+  ],
+  "connections": {
+    "Simulator Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Valid?": {
+      "main": [
+        [
+          {
+            "node": "Send To Ingest API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fail Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send To Ingest API": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [
+          {
+            "node": "Is Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "b2a5cd3ad58a9cdd8d2cbf7e50e695e7cb1b57ef19cac60657554c605a5bdd3c"
+  }
+}
