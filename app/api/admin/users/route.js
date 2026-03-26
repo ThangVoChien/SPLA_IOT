@@ -10,6 +10,7 @@ export async function POST(request) {
     const user = await AdminService.addUser(data);
     return NextResponse.json(user);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const status = /required|exists|invalid/i.test(error.message) ? 400 : 500;
+    return NextResponse.json({ error: error.message }, { status });
   }
 }
