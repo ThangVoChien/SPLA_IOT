@@ -20,15 +20,13 @@ export default function AddUserForm() {
     const formData = new FormData(e.target);
     const username = formData.get('username');
     const password = formData.get('password');
-    const orgId = formData.get('orgId');
-    const role = formData.get('role');
+    const orgName = formData.get('orgName');
 
     try {
       const res = await adminUtils('users', 'POST', { 
-        orgId,
+        orgName,
         username,
-        password,
-        role
+        password
       });
       if (res.error) {
         setError(res.error);
