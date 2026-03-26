@@ -9,17 +9,28 @@ export async function POST(request) {
   const cookieStore = await cookies();
 
   try {
+    const normalizedOrgName = String(orgName ?? '').trim();
+    const normalizedUsername = String(username ?? '').trim();
+    const normalizedPassword = String(password ?? '');
+
+    if (!normalizedOrgName || !normalizedUsername || !normalizedPassword) {
+      return NextResponse.json(
+        { error: 'orgName, username, and password are required' },
+        { status: 400 }
+      );
+    }
+
     const org = await prisma.organization.upsert({
-      where: { name: orgName },
+      where: { name: normalizedOrgName },
       update: {},
-      create: { name: orgName }
+      create: { name: normalizedOrgName }
     });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(normalizedPassword, 10);
     const user = await prisma.user.create({
       data: {
         orgId: org.id,
-        username,
+        username: normalizedUsername,
         passwordHash: hashedPassword,
         role: 'USER'
       }
