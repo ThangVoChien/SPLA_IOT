@@ -42,7 +42,9 @@ export async function PUT(request, { params }) {
 
     // Fetch devices
     const devices = await prisma.$queryRaw`
-      SELECT * FROM devices WHERE productionAreaId = ${id}
+      SELECT *, production_areaId AS productionAreaId
+      FROM devices
+      WHERE production_areaId = ${id}
     `;
 
     return NextResponse.json({ ...area[0], devices });
@@ -73,7 +75,7 @@ export async function DELETE(request, { params }) {
 
     // First, unassign all devices from this area
     await prisma.$executeRaw`
-      UPDATE devices SET productionAreaId = NULL WHERE productionAreaId = ${id}
+      UPDATE devices SET production_areaId = NULL WHERE production_areaId = ${id}
     `;
 
     // Then delete the area

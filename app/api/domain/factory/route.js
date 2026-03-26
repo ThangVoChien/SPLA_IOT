@@ -15,7 +15,9 @@ export async function GET(request) {
     const areasWithDevices = await Promise.all(
       areas.map(async (area) => {
         const devices = await prisma.$queryRaw`
-          SELECT * FROM devices WHERE productionAreaId = ${area.id}
+          SELECT *, production_areaId AS productionAreaId
+          FROM devices
+          WHERE production_areaId = ${area.id}
         `;
         return { ...area, devices };
       })
@@ -106,19 +108,19 @@ export async function PATCH(request) {
     if (action === 'assign') {
       // First, unassign all devices from this group
       await prisma.$executeRaw`
-        UPDATE devices SET productionAreaId = NULL WHERE productionAreaId = ${groupId}
+        UPDATE devices SET production_areaId = NULL WHERE production_areaId = ${groupId}
       `;
       
       // Then assign the selected devices
       for (const deviceId of deviceIds) {
         await prisma.$executeRaw`
-          UPDATE devices SET productionAreaId = ${groupId} WHERE id = ${deviceId}
+          UPDATE devices SET production_areaId = ${groupId} WHERE id = ${deviceId}
         `;
       }
     } else if (action === 'unassign') {
       for (const deviceId of deviceIds) {
         await prisma.$executeRaw`
-          UPDATE devices SET productionAreaId = NULL WHERE id = ${deviceId}
+          UPDATE devices SET production_areaId = NULL WHERE id = ${deviceId}
         `;
       }
     } else {
@@ -130,7 +132,9 @@ export async function PATCH(request) {
 
     // Return updated area with devices
     const devices = await prisma.$queryRaw`
-      SELECT * FROM devices WHERE productionAreaId = ${groupId}
+      SELECT *, production_areaId AS productionAreaId
+      FROM devices
+      WHERE production_areaId = ${groupId}
     `;
 
     return NextResponse.json({ ...area[0], devices });

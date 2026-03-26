@@ -25,18 +25,18 @@ export async function GET(request) {
     if (groupId) {
       // Include unassigned devices OR devices already in this group
       query = `
-        SELECT d.*, s.sensorType, s.unit, s.dataType, s.alertTemplate
+        SELECT d.*, d.production_areaId AS productionAreaId, s.sensorType, s.unit, s.dataType, s.alertTemplate
         FROM devices d
         LEFT JOIN sensors s ON d.sensorId = s.id
-        WHERE d.orgId = ? AND (d.productionAreaId IS NULL OR d.productionAreaId = ?)
+        WHERE d.orgId = ? AND (d.production_areaId IS NULL OR d.production_areaId = ?)
       `;
     } else {
       // Include only unassigned devices
       query = `
-        SELECT d.*, s.sensorType, s.unit, s.dataType, s.alertTemplate
+        SELECT d.*, d.production_areaId AS productionAreaId, s.sensorType, s.unit, s.dataType, s.alertTemplate
         FROM devices d
         LEFT JOIN sensors s ON d.sensorId = s.id
-        WHERE d.orgId = ? AND d.productionAreaId IS NULL
+        WHERE d.orgId = ? AND d.production_areaId IS NULL
       `;
     }
 
